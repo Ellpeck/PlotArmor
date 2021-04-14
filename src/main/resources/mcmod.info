@@ -1,0 +1,19 @@
+[
+    {
+        "modid": "plotarmor",
+        "name": "Plot Armor",
+        "description": "Admin ui for changing players' HP",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "https://github.com/Ellpeck/PlotArmor",
+        "updateUrl": "",
+        "authorList": ["Ellpeck"],
+        "credits": "Commission for JageRage",
+        "logoFile": "",
+        "screenshots": [
+        ],
+        "parent": "",
+        "dependencies": [
+        ]
+    }
+]
