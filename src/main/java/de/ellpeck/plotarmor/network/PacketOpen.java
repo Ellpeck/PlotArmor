@@ -1,7 +1,9 @@
 package de.ellpeck.plotarmor.network;
 
+import de.ellpeck.plotarmor.PlotArmor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -25,8 +27,10 @@ public class PacketOpen implements IMessage {
 
         @Override
         public IMessage onMessage(PacketOpen message, MessageContext ctx) {
-            EntityPlayer player = ctx.getServerHandler().player;
-            return new PacketPlayerList(player.world.playerEntities);
+            EntityPlayerMP player = ctx.getServerHandler().player;
+            if (player.canUseCommand(PlotArmor.PERMISSION_LEVEL, PlotArmor.ID))
+                return new PacketPlayerList(player.world.playerEntities);
+            return null;
         }
     }
 }

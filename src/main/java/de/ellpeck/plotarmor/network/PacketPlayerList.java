@@ -54,18 +54,21 @@ public class PacketPlayerList implements IMessage {
         @Override
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(PacketPlayerList message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> {
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.addScheduledTask(() -> {
                 // store player info on players
                 for (Player player : message.players) {
-                    EntityPlayer entity = Minecraft.getMinecraft().world.getPlayerEntityByUUID(player.id);
+                    EntityPlayer entity = mc.world.getPlayerEntityByUUID(player.id);
                     if (entity != null)
                         PlotArmor.setEnabled(entity, player.plotArmorEnabled);
                 }
 
                 // possibly give info to the admin ui
-                GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-                if (screen instanceof GuiPlotArmor)
-                    ((GuiPlotArmor) screen).setPlayers(message.players);
+                if (mc.player.getPermissionLevel() >= PlotArmor.PERMISSION_LEVEL) {
+                    GuiScreen screen = mc.currentScreen;
+                    if (screen instanceof GuiPlotArmor)
+                        ((GuiPlotArmor) screen).setPlayers(message.players);
+                }
             });
             return null;
         }

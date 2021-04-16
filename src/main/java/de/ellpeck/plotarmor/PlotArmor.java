@@ -14,6 +14,8 @@ public class PlotArmor {
     public static final String NAME = "Plot Armor";
     public static final String VERSION = "@VERSION@";
 
+    public static final int PERMISSION_LEVEL = 4;
+
     @SidedProxy(clientSide = "de.ellpeck.plotarmor.proxy.ClientProxy", serverSide = "de.ellpeck.plotarmor.proxy.ServerProxy")
     public static IProxy proxy;
 

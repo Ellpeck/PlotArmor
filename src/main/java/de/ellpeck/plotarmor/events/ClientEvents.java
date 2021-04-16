@@ -1,6 +1,7 @@
 package de.ellpeck.plotarmor.events;
 
 import de.ellpeck.plotarmor.GuiPlotArmor;
+import de.ellpeck.plotarmor.PlotArmor;
 import de.ellpeck.plotarmor.network.PacketOpen;
 import de.ellpeck.plotarmor.network.PacketHandler;
 import de.ellpeck.plotarmor.proxy.ClientProxy;
@@ -17,9 +18,9 @@ public class ClientEvents {
     public static void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END)
             return;
-        // TODO check if the person has enough permission level (on the server too!)
-        if (ClientProxy.OPEN_KEYBIND.isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiPlotArmor());
+        Minecraft mc = Minecraft.getMinecraft();
+        if (ClientProxy.OPEN_KEYBIND.isPressed() && mc.player.getPermissionLevel() >= PlotArmor.PERMISSION_LEVEL) {
+            mc.displayGuiScreen(new GuiPlotArmor());
             PacketHandler.sendToServer(new PacketOpen());
         }
     }
