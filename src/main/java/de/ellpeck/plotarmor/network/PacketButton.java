@@ -1,11 +1,12 @@
 package de.ellpeck.plotarmor.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class PacketButton implements IMessage {
 
@@ -32,19 +33,19 @@ public class PacketButton implements IMessage {
 
         @Override
         public IMessage onMessage(PacketButton message, MessageContext ctx) {
-            message.action.action.accept(ctx);
-            return null;
+            return message.action.action.apply(ctx);
         }
     }
 
     public enum Action {
         OPEN(c -> {
-            // TODO actually open the gui and send PacketPlayerList
+            EntityPlayer player = c.getServerHandler().player;
+            return new PacketPlayerList(player.world.playerEntities);
         });
 
-        public final Consumer<MessageContext> action;
+        public final Function<MessageContext, IMessage> action;
 
-        Action(Consumer<MessageContext> action) {
+        Action(Function<MessageContext, IMessage> action) {
             this.action = action;
         }
     }

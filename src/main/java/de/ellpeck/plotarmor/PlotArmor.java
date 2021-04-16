@@ -2,6 +2,7 @@ package de.ellpeck.plotarmor;
 
 import de.ellpeck.plotarmor.network.PacketHandler;
 import de.ellpeck.plotarmor.proxy.IProxy;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -20,5 +21,13 @@ public class PlotArmor {
     public static void preInit(FMLPreInitializationEvent event) {
         PacketHandler.init();
         proxy.preInit(event);
+    }
+
+    public static void setEnabled(EntityPlayer player, boolean enabled) {
+        player.getEntityData().setBoolean(ID, enabled);
+    }
+
+    public static boolean isEnabled(EntityPlayer player) {
+        return player.getEntityData().getBoolean(ID);
     }
 }

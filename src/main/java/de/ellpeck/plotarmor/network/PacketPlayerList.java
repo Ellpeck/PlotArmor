@@ -1,6 +1,10 @@
 package de.ellpeck.plotarmor.network;
 
+import de.ellpeck.plotarmor.GuiPlotArmor;
+import de.ellpeck.plotarmor.PlotArmor;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -21,7 +25,7 @@ public class PacketPlayerList implements IMessage {
 
     public PacketPlayerList(Collection<EntityPlayer> players) {
         this.players = players.stream()
-                .map(p -> new Player(p.getUniqueID(), p.getDisplayNameString(), p.getHealth() / p.getMaxHealth()))
+                .map(p -> new Player(p.getUniqueID(), p.getDisplayNameString(), p.getHealth() / p.getMaxHealth(), PlotArmor.isEnabled(p)))
                 .collect(Collectors.toList());
     }
 
@@ -39,6 +43,7 @@ public class PacketPlayerList implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         PacketBuffer pb = new PacketBuffer(buf);
+        pb.writeInt(this.players.size());
         for (Player player : this.players)
             player.toBytes(pb);
     }
@@ -48,7 +53,19 @@ public class PacketPlayerList implements IMessage {
         @Override
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(PacketPlayerList message, MessageContext ctx) {
-            // TODO add players to screen here
+            Minecraft.getMinecraft().addScheduledTask(() -> {
+                // possibly give info to the ui
+                GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+                if (screen instanceof GuiPlotArmor)
+                    ((GuiPlotArmor) screen).setPlayers(message.players);
+
+                // store player info back on players in case they're close
+                for (Player player : message.players) {
+                    EntityPlayer entity = Minecraft.getMinecraft().world.getPlayerEntityByUUID(player.id);
+                    if (entity != null)
+                        PlotArmor.setEnabled(entity, player.plotArmorEnabled);
+                }
+            });
             return null;
         }
     }
@@ -57,24 +74,28 @@ public class PacketPlayerList implements IMessage {
 
         public final UUID id;
         public final String name;
-        public final float health;
+        public float healthPercentage;
+        public boolean plotArmorEnabled;
 
-        private Player(UUID id, String name, float health) {
+        private Player(UUID id, String name, float healthPercentage, boolean plotArmorEnabled) {
             this.id = id;
             this.name = name;
-            this.health = health;
+            this.healthPercentage = healthPercentage;
+            this.plotArmorEnabled = plotArmorEnabled;
         }
 
         private Player(PacketBuffer buf) {
             this.id = buf.readUniqueId();
-            this.name = buf.readString(256);
-            this.health = buf.readFloat();
+            this.healthPercentage = buf.readFloat();
+            this.plotArmorEnabled = buf.readBoolean();
+            this.name = buf.readString(64);
         }
 
         private void toBytes(PacketBuffer buf) {
             buf.writeUniqueId(this.id);
+            buf.writeFloat(this.healthPercentage);
+            buf.writeBoolean(this.plotArmorEnabled);
             buf.writeString(this.name);
-            buf.writeFloat(this.health);
         }
 
     }
