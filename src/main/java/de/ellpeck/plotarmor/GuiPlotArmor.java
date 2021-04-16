@@ -1,6 +1,8 @@
 package de.ellpeck.plotarmor;
 
+import de.ellpeck.plotarmor.network.PacketHandler;
 import de.ellpeck.plotarmor.network.PacketPlayerList;
+import de.ellpeck.plotarmor.network.PacketToggle;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -179,8 +181,8 @@ public class GuiPlotArmor extends GuiScreen {
             if (button != this.toggleButton)
                 return false;
             this.player.plotArmorEnabled = !this.player.plotArmorEnabled;
+            PacketHandler.sendToServer(new PacketToggle(this.player.id, this.player.plotArmorEnabled));
             this.updateButtonText();
-            // TODO send packet to server
             return true;
         }
 

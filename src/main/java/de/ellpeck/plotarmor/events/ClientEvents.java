@@ -1,7 +1,7 @@
 package de.ellpeck.plotarmor.events;
 
 import de.ellpeck.plotarmor.GuiPlotArmor;
-import de.ellpeck.plotarmor.network.PacketButton;
+import de.ellpeck.plotarmor.network.PacketOpen;
 import de.ellpeck.plotarmor.network.PacketHandler;
 import de.ellpeck.plotarmor.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
@@ -19,8 +19,8 @@ public class ClientEvents {
             return;
         // TODO check if the person has enough permission level (on the server too!)
         if (ClientProxy.OPEN_KEYBIND.isPressed()) {
-            PacketHandler.sendToServer(new PacketButton(PacketButton.Action.OPEN));
             Minecraft.getMinecraft().displayGuiScreen(new GuiPlotArmor());
+            PacketHandler.sendToServer(new PacketOpen());
         }
     }
 

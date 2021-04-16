@@ -13,8 +13,9 @@ public class PacketHandler {
 
     public static void init() {
         network = new SimpleNetworkWrapper(PlotArmor.ID);
-        network.registerMessage(PacketButton.Handler.class, PacketButton.class, 0, Side.SERVER);
+        network.registerMessage(PacketOpen.Handler.class, PacketOpen.class, 0, Side.SERVER);
         network.registerMessage(PacketPlayerList.Handler.class, PacketPlayerList.class, 1, Side.CLIENT);
+        network.registerMessage(PacketToggle.Handler.class, PacketToggle.class, 2, Side.SERVER);
     }
 
     public static void sendTo(EntityPlayer player, IMessage message) {

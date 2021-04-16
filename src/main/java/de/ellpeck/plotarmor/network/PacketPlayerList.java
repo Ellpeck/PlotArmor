@@ -13,15 +13,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PacketPlayerList implements IMessage {
 
     private List<Player> players;
+
+    public PacketPlayerList(EntityPlayer player) {
+        this(Collections.singleton(player));
+    }
 
     public PacketPlayerList(Collection<EntityPlayer> players) {
         this.players = players.stream()
@@ -54,17 +55,17 @@ public class PacketPlayerList implements IMessage {
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(PacketPlayerList message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
-                // possibly give info to the ui
-                GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-                if (screen instanceof GuiPlotArmor)
-                    ((GuiPlotArmor) screen).setPlayers(message.players);
-
-                // store player info back on players in case they're close
+                // store player info on players
                 for (Player player : message.players) {
                     EntityPlayer entity = Minecraft.getMinecraft().world.getPlayerEntityByUUID(player.id);
                     if (entity != null)
                         PlotArmor.setEnabled(entity, player.plotArmorEnabled);
                 }
+
+                // possibly give info to the admin ui
+                GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+                if (screen instanceof GuiPlotArmor)
+                    ((GuiPlotArmor) screen).setPlayers(message.players);
             });
             return null;
         }
