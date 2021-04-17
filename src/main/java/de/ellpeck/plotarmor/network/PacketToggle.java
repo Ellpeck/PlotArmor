@@ -41,7 +41,7 @@ public class PacketToggle implements IMessage {
         public IMessage onMessage(PacketToggle message, MessageContext ctx) {
             EntityPlayer invoker = ctx.getServerHandler().player;
             EntityPlayer player = invoker.world.getPlayerEntityByUUID(message.player);
-            if (player != null && player.canUseCommand(PlotArmor.PERMISSION_LEVEL, PlotArmor.ID)) {
+            if (player != null && invoker.canUseCommand(PlotArmor.PERMISSION_LEVEL, PlotArmor.ID)) {
                 PlotArmor.setEnabled(player, message.value);
                 // notify the player whose value was just updated
                 PacketHandler.sendTo(player, new PacketPlayerList(player));
