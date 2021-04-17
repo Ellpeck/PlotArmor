@@ -2,7 +2,7 @@
     {
         "modid": "plotarmor",
         "name": "Plot Armor",
-        "description": "Admin ui for changing players' HP",
+        "description": "A mod that adds an admin ui to stop players from being able to die",
         "version": "${version}",
         "mcversion": "${mcversion}",
         "url": "https://github.com/Ellpeck/PlotArmor",
