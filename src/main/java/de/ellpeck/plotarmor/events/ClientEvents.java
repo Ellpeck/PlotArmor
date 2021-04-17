@@ -16,10 +16,10 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END)
+        if (event.phase != TickEvent.Phase.START)
             return;
         Minecraft mc = Minecraft.getMinecraft();
-        if (ClientProxy.OPEN_KEYBIND.isPressed() && mc.player.getPermissionLevel() >= PlotArmor.PERMISSION_LEVEL) {
+        if (mc.currentScreen == null && ClientProxy.OPEN_KEYBIND.isPressed() && mc.player.getPermissionLevel() >= PlotArmor.PERMISSION_LEVEL) {
             mc.displayGuiScreen(new GuiPlotArmor());
             PacketHandler.sendToServer(new PacketOpen());
         }

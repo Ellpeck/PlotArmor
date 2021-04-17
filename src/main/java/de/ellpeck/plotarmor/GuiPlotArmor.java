@@ -3,6 +3,7 @@ package de.ellpeck.plotarmor;
 import de.ellpeck.plotarmor.network.PacketHandler;
 import de.ellpeck.plotarmor.network.PacketPlayerList;
 import de.ellpeck.plotarmor.network.PacketToggle;
+import de.ellpeck.plotarmor.proxy.ClientProxy;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -110,6 +111,17 @@ public class GuiPlotArmor extends GuiScreen {
         for (Widget widget : this.widgets) {
             if (widget.actionPerformed(button))
                 return;
+        }
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        super.keyTyped(typedChar, keyCode);
+        // close the plot armor ui with the plot armor key
+        if (ClientProxy.OPEN_KEYBIND.isActiveAndMatches(keyCode)) {
+            this.mc.displayGuiScreen(null);
+            if (this.mc.currentScreen == null)
+                this.mc.setIngameFocus();
         }
     }
 

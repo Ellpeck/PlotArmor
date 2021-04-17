@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 
 public class ClientProxy implements IProxy {
 
-    public static final KeyBinding OPEN_KEYBIND = new KeyBinding("key." + PlotArmor.ID + ".open", KeyConflictContext.IN_GAME, Keyboard.KEY_P, "key.categories.multiplayer");
+    public static final KeyBinding OPEN_KEYBIND = new KeyBinding("key." + PlotArmor.ID + ".open", KeyConflictContext.UNIVERSAL, Keyboard.KEY_P, "key.categories.multiplayer");
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
