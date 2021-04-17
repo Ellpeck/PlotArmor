@@ -29,7 +29,7 @@ public class PacketOpen implements IMessage {
         public IMessage onMessage(PacketOpen message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
             if (player.canUseCommand(PlotArmor.PERMISSION_LEVEL, PlotArmor.ID))
-                return new PacketPlayerList(player.world.playerEntities);
+                return new PacketPlayerList(player.world);
             return null;
         }
     }

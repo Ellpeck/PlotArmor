@@ -22,7 +22,7 @@ public class CommonEvents {
         if (entity instanceof EntityPlayer && !entity.world.isRemote) {
             // notify the player of their plot armor state
             EntityPlayer player = (EntityPlayer) entity;
-            PacketHandler.sendTo(player, new PacketPlayerList(player));
+            PacketHandler.sendTo(player, new PacketPlayerList(player.world));
         }
     }
 

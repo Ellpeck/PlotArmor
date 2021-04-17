@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -20,12 +21,8 @@ public class PacketPlayerList implements IMessage {
 
     private List<Player> players;
 
-    public PacketPlayerList(EntityPlayer player) {
-        this(Collections.singleton(player));
-    }
-
-    public PacketPlayerList(Collection<EntityPlayer> players) {
-        this.players = players.stream()
+    public PacketPlayerList(World world) {
+        this.players = world.playerEntities.stream()
                 .map(p -> new Player(p.getUniqueID(), p.getDisplayNameString(), p.getHealth() / p.getMaxHealth(), PlotArmor.isEnabled(p)))
                 .collect(Collectors.toList());
     }
